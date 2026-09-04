@@ -10,6 +10,10 @@ const DRIVE = ["gdoc", "drive-html", "drive-pdf"];
 
 // Mirrors outputs.parse() on the server, so the UI can show what a tick
 // silently pulls in rather than surprising the user afterwards.
+// Output name -> the folder its files land in, so the result screen can tell
+// which groups came from this run.
+const KIND_FOR = { md: "export-md", gdoc: "gdocs", "drive-html": "html", "drive-pdf": "pdf" };
+
 const DEPENDS = {
   gdoc: ["docx"],
   "drive-html": ["html"],
@@ -332,25 +336,55 @@ async function finish() {
   }
   $("done-summary").innerHTML = notes.join("") || `<div class="banner ok">Finished.</div>`;
 
+  // Everything the course has ever produced lives on disk, and listing all of
+  // it flat buries the handful of files this run was actually about. Group by
+  // format, and open only the formats that were asked for this time.
   const files = (r.artifacts || []).filter((a) => a.download);
-  const links = (r.links || []);
-  const rows = [];
-  links.forEach((l) => rows.push(
-    `<div class="file"><span class="kind">drive</span>
-     <span class="nm">${l.label}</span>
-     <a href="${l.url}" target="_blank" rel="noopener">open</a></div>`));
+  const links = r.links || [];
+  const produced = new Set((r.outputs || []).map((o) => KIND_FOR[o] || o));
+
+  const parts = [];
+  if (links.length) {
+    parts.push(`<label class="lbl">In your Drive</label><div class="files">` +
+      links.map((l) =>
+        `<div class="file"><span class="kind">drive</span>
+         <span class="nm">${l.label}</span>
+         <a href="${l.url}" target="_blank" rel="noopener">open</a></div>`).join("") +
+      `</div>`);
+  }
+
+  const groups = new Map();
   files.forEach((f) => {
-    const url = f.download + `?token=${encodeURIComponent(TOKEN)}`;
-    const viewable = /\.(html?|pdf|md|txt|png)$/i.test(f.name);
-    rows.push(
-      `<div class="file"><span class="kind">${f.kind}</span>
-       <span class="nm">${f.name}</span>
-       <span class="sz">${bytes(f.size)}</span>
-       ${viewable ? `<a href="${url}&inline=true" target="_blank" rel="noopener">view</a>` : ""}
-       <a href="${url}" download>download</a></div>`);
+    if (!groups.has(f.kind)) groups.set(f.kind, []);
+    groups.get(f.kind).push(f);
   });
-  $("done-files").innerHTML = rows.length
-    ? `<label class="lbl">Files</label><div class="files">${rows.join("")}</div>`
+
+  // Formats from this run first, then the rest.
+  const kinds = [...groups.keys()].sort((a, b) =>
+    (produced.has(b) ? 1 : 0) - (produced.has(a) ? 1 : 0) || a.localeCompare(b));
+
+  kinds.forEach((kind) => {
+    const items = groups.get(kind);
+    const fresh = produced.has(kind);
+    const rows = items.map((f) => {
+      const url = f.download + `?token=${encodeURIComponent(TOKEN)}`;
+      const viewable = /\.(html?|pdf|md|txt|png)$/i.test(f.name);
+      return `<div class="file"><span class="nm">${f.name}</span>
+        <span class="sz">${bytes(f.size)}</span>
+        ${viewable ? `<a href="${url}&inline=true" target="_blank" rel="noopener">view</a>` : ""}
+        <a href="${url}" download>download</a></div>`;
+    }).join("");
+    parts.push(
+      `<details class="group-files" ${fresh ? "open" : ""}>
+         <summary><span class="kind">${kind}</span>
+           <span class="gcount">${items.length} file${items.length === 1 ? "" : "s"}</span>
+           ${fresh ? `<span class="fresh">this run</span>` : ""}</summary>
+         <div class="files">${rows}</div>
+       </details>`);
+  });
+
+  $("done-files").innerHTML = parts.length
+    ? parts.join("")
     : `<p class="muted">Nothing was produced.</p>`;
 
   show("done");

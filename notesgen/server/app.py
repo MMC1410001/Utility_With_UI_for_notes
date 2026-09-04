@@ -12,6 +12,7 @@ import json
 import time
 import webbrowser
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import Body, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -333,7 +334,13 @@ def _artifact_json(course_dir: str, artifacts) -> list[dict]:
     for art in artifacts:
         entry = {"kind": art.kind, "name": art.name, "size": art.size, "url": art.url}
         if art.path is not None:
-            entry["download"] = f"/api/files/{course_dir}/{art.kind}/{art.name}"
+            # Course and file names contain spaces, commas and brackets. A
+            # browser would paper over that; anything else consuming this JSON
+            # (the extension, curl, a script) would not.
+            segments = "/".join(
+                quote(part, safe="") for part in (course_dir, art.kind, art.name)
+            )
+            entry["download"] = f"/api/files/{segments}"
         out.append(entry)
     return out
 

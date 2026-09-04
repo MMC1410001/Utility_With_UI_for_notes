@@ -148,3 +148,20 @@ button.ghost:hover { border-color: var(--accent); color: var(--accent); }
           background: var(--code-bg); border-radius: 6px; font-size: 13.5px; margin-bottom: 14px; }
 .banner.bad { border-left-color: var(--bad); }
 .banner.ok { border-left-color: var(--ok); }
+
+/* The "or a course already captured" block needs air after the hint above it. */
+#captured-wrap { margin-top: 18px; }
+
+/* Result screen: one collapsible group per output format. */
+.group-files { border: 1px solid var(--line); border-radius: 8px;
+               padding: 10px 12px; margin-bottom: 9px; background: var(--bg); }
+.group-files > summary { cursor: pointer; display: flex; align-items: center;
+                         gap: 10px; list-style: none; }
+.group-files > summary::-webkit-details-marker { display: none; }
+.group-files > summary::before { content: "\25B8"; color: var(--muted); font-size: 11px; }
+.group-files[open] > summary::before { content: "\25BE"; }
+.group-files[open] > summary { margin-bottom: 8px; }
+.gcount { color: var(--muted); font-size: 12.5px; }
+.fresh { font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+         color: var(--accent); border: 1px solid var(--accent);
+         border-radius: 4px; padding: 0 5px; }
