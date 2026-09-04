@@ -1,0 +1,102 @@
+# ASR term corrections applied to transcripts before they reach the model.
+#
+# Format:  Correct Term: [list, of, misheard, variants]
+# Matching is case-insensitive, on whole words/phrases only. Longer variants
+# are tried first so "Lang graph" wins over any shorter overlapping rule.
+#
+# SAFETY RULE: never add a variant that is also an ordinary English word in
+# this domain. "Face"/"Phase" -> FAISS looks tempting and would corrupt every
+# legitimate use of those words. When in doubt, leave it to the model, which
+# is told to repair residual ASR noise from context.
+#
+# Add a course-specific file and pass --glossary to override or extend this.
+
+LangGraph:
+  - Landgraf
+  - Lang graph
+  - Lang Graf
+  - Langgraf
+  - line graph
+  - lang-graph
+
+LangChain:
+  - Lankin
+  - Lang chain
+  - Lang Kin
+  - Landchain
+  - lang-chain
+
+LangSmith:
+  - Lang Smith
+  - Langsmith
+  - Lang smith
+
+Agentic AI:
+  - genetic AI
+  - a genetic AI
+  - agenetic AI
+
+LLMs:
+  - Llms
+  - LLMS
+  - ELLMs
+
+Groq:
+  # This course means Groq the inference provider, never xAI's Grok.
+  - grok
+  - Grok
+  - grock
+  - Grocq
+
+Llama:
+  - Lama
+  - Lamma
+  - Llamma
+
+Ollama:
+  - Olama
+  - Oh Lama
+  - Ollamma
+
+Pydantic:
+  - Pedantic
+  - Pi dantic
+  - Pydentic
+
+Hugging Face:
+  - Hugging face
+  - hugging-face
+
+OpenAI:
+  - Open AI
+  - open-ai
+
+Anthropic:
+  - Anthropik
+
+Claude Code:
+  - Cloud Code
+
+Chroma:
+  - Chroma DB
+  - Kroma
+
+StateGraph:
+  - State graph
+  - state-graph
+
+MCP:
+  - M C P
+
+Streamlit:
+  - Stream lit
+  - Streamlet
+
+NumPy:
+  - Num pi
+
+TypedDict:
+  - Typed dict
+
+LCEL:
+  - L C E L

@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <h1><span class="dot" id="dot"></span><span id="server">checking server…</span></h1>
+  <div class="muted" id="where"></div>
+
+  <div class="box" id="setup-hint" hidden>
+    <div class="muted">Start the server on your machine:</div>
+    <div class="box" style="margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:12px">
+      python3 -m notesgen serve
+    </div>
+    <div class="row"><button class="ghost" id="retry">Try again</button></div>
+    <div style="margin-top:8px"><a class="link" href="#" id="opts1">Settings</a></div>
+  </div>
+
+  <div id="main" hidden>
+    <div class="box">
+      <span class="lbl">Produce</span>
+      <div class="opts" id="outputs"></div>
+    </div>
+
+    <div class="box" id="course-box">
+      <span class="lbl">Course</span>
+      <div id="course" class="muted">Open a Udemy course page.</div>
+      <div class="row"><button id="go" disabled>Generate notes</button></div>
+    </div>
+
+    <div class="box hidden" id="progress-box">
+      <span class="lbl" id="phase">Working</span>
+      <div id="ptitle" class="muted"></div>
+      <div class="track"><span class="fill" id="fill"></span></div>
+      <div class="muted" id="pcount"></div>
+      <div class="err" id="perr"></div>
+      <div class="files" id="files"></div>
+      <div class="row"><button class="ghost" id="clear">Start over</button></div>
+    </div>
+
+    <div style="margin-top:10px;display:flex;justify-content:space-between">
+      <a class="link" href="#" id="open-ui">Open full UI</a>
+      <a class="link" href="#" id="opts2">Settings</a>
+    </div>
+  </div>
+<script src="popup.js"></script>
+</body></html>

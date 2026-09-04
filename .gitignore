@@ -1,0 +1,29 @@
+# Generated notes. These are derived from paid Udemy course content and must
+# not be published — see README. Keep them local.
+output/
+
+# Credentials — the OAuth client and cached Google token live here
+.env
+.gdocs/
+
+# Extracted zips, fetched transcripts, and the browser profile used for login
+input/
+
+# Run logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+
+# packaging and local server state
+.notesgen/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+extension/*.zip
+node_modules/

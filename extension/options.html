@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>notesgen settings</title>
+<link rel="stylesheet" href="popup.css">
+<style>body{width:auto;max-width:520px;padding:26px}input{width:100%;padding:9px;
+font:inherit;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink)}
+label{display:block;margin:14px 0 6px;font-weight:600;font-size:13px}</style></head>
+<body>
+  <h1 style="font-size:17px">notesgen settings</h1>
+  <label for="url">Server address</label>
+  <input id="url" type="text" placeholder="http://127.0.0.1:8787">
+  <div class="muted">Use 127.0.0.1 rather than localhost.</div>
+
+  <label for="token">Access token</label>
+  <input id="token" type="text" spellcheck="false" placeholder="paste the token from the terminal">
+  <div class="muted">
+    <code>notesgen serve</code> prints this on startup. It stops other websites
+    from reaching the server running on your machine.
+  </div>
+
+  <div class="row" style="margin-top:18px"><button id="save">Save</button></div>
+  <div class="muted" id="saved" style="margin-top:9px"></div>
+</body>
+<script src="options.js"></script></html>

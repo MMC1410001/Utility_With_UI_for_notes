@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>notesgen</title>
+<link rel="stylesheet" href="/static/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+</head>
+<body>
+<script>window.NOTESGEN_TOKEN = "__NOTESGEN_TOKEN__";</script>
+
+<header class="bar">
+  <div class="brand">notesgen</div>
+  <div class="strip" id="strip"><span class="muted">checking…</span></div>
+</header>
+
+<main>
+  <!-- ---------------------------------------------------------- start -->
+  <section id="view-start" class="view">
+    <h1>Turn a Udemy course into revision notes</h1>
+
+    <div class="card">
+      <label class="lbl" for="source">Course</label>
+      <input id="source" type="text" spellcheck="false"
+             placeholder="https://www.udemy.com/course/… — or a .zip / folder path">
+      <div class="hint" id="source-hint">
+        Paste a course URL. A browser window will open so you can sign in to Udemy.
+        <strong>The Chrome extension avoids that</strong> — it captures transcripts
+        straight from the page you are already signed in to.
+      </div>
+
+      <div id="captured-wrap" class="hidden">
+        <label class="lbl">…or a course already captured</label>
+        <div id="captured" class="chips"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="lbl">What should it produce?</label>
+      <div class="groups">
+        <div class="group">
+          <h3>Documents</h3>
+          <div id="grp-local" class="opts"></div>
+        </div>
+        <div class="group">
+          <h3>Google Drive</h3>
+          <div id="grp-drive" class="opts"></div>
+          <div class="hint" id="drive-hint"></div>
+        </div>
+      </div>
+      <div class="hint" id="deps"></div>
+    </div>
+
+    <details class="card">
+      <summary>Advanced</summary>
+      <div class="adv">
+        <label>Parallel workers <input id="workers" type="number" min="1" max="12" value="3"></label>
+        <label>Only section(s) <input id="sections" type="text" placeholder="e.g. 3,7"></label>
+        <label>Only lectures matching <input id="only" type="text" placeholder="glob, e.g. 05-*/*intro*"></label>
+        <label class="check"><input id="force" type="checkbox"> Regenerate everything (ignores what is already current)</label>
+        <label class="check"><input id="refetch" type="checkbox"> Re-download transcripts</label>
+        <label class="check"><input id="keepgoing" type="checkbox"> Carry on even if some lectures fail</label>
+      </div>
+    </details>
+
+    <div class="actions">
+      <button id="go" class="primary">Generate notes</button>
+      <span id="go-note" class="hint"></span>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ run -->
+  <section id="view-run" class="view hidden">
+    <h1 id="run-title">Running…</h1>
+    <div class="card">
+      <div id="stages"></div>
+      <div class="runbar">
+        <span id="run-cost" class="muted"></span>
+        <button id="cancel" class="ghost">Cancel</button>
+      </div>
+    </div>
+    <details class="card" id="logwrap" open>
+      <summary>Output</summary>
+      <pre id="log" class="log"></pre>
+    </details>
+  </section>
+
+  <!-- --------------------------------------------------------- result -->
+  <section id="view-done" class="view hidden">
+    <h1 id="done-title">Done</h1>
+    <div id="done-summary" class="card"></div>
+    <div id="done-files" class="card"></div>
+    <div class="actions">
+      <button id="again" class="primary">New run</button>
+      <button id="reopen" class="ghost hidden">Show output</button>
+    </div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

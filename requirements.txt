@@ -1,0 +1,7 @@
+# Core: everything except the Udemy fetch, Google Drive upload and API providers.
+pyyaml
+python-docx
+
+# The local web UI (`notesgen serve`) and the Chrome extension's server.
+fastapi>=0.110
+uvicorn[standard]>=0.27

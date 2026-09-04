@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "notesgen capture",
+  "version": "1.0.0",
+  "description": "Send a Udemy course's transcripts to your local notesgen server and get notes as PDF, HTML or a Google Doc.",
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "alarms", "notifications"],
+  "host_permissions": [
+    "https://www.udemy.com/*",
+    "https://*.udemycdn.com/*",
+    "https://*.cloudfront.net/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "optional_host_permissions": ["https://*/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.udemy.com/course/*"],
+      "js": ["lib/udemy.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "notesgen",
+    "default_icon": { "16": "icons/16.png", "32": "icons/32.png" }
+  },
+  "options_page": "options.html",
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" }
+}

@@ -1,0 +1,16 @@
+#notesgen-launch {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2147483000;
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 17px; border: 0; border-radius: 999px;
+  background: #b4530a; color: #fff; cursor: pointer;
+  font: 600 14px/1 -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, .28);
+}
+#notesgen-launch:hover { background: #99460a; }
+#notesgen-launch[disabled] { opacity: .75; cursor: default; }
+#notesgen-launch .ng-spin {
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.35); border-top-color: #fff;
+  animation: ng-spin .8s linear infinite;
+}
+@keyframes ng-spin { to { transform: rotate(360deg); } }
