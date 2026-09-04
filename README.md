@@ -29,7 +29,12 @@ A real run: a 26-section, 183-lecture course became 202,000 words of notes and
 
 ## Contents
 
-1. [Quickstart](#quickstart)
+1. **[Quickstart](#quickstart)** — start here
+   1. [Install](#step-1--install)
+   2. [Tell it who should write the notes](#step-2--tell-it-who-should-write-the-notes)
+   3. [Start it](#step-3--start-it)
+   4. [Give it a course](#step-4--give-it-a-course)
+   5. [Pick what you want](#step-5--pick-what-you-want-and-press-generate)
 2. [The Chrome extension](#the-chrome-extension)
 3. [Before you start](#1-before-you-start)
 4. [Install](#2-install)
@@ -49,29 +54,74 @@ A real run: a 26-section, 183-lecture course became 202,000 words of notes and
 
 ## Quickstart
 
+Five steps, start to finish. Nothing here assumes you use Claude.
+
+### Step 1 — Install
+
 ```bash
-git clone https://github.com/<you>/notesgen.git
-cd notesgen
+git clone https://github.com/MMC1410001/Utility_With_UI_for_notes.git
+cd Utility_With_UI_for_notes
 python3 -m pip install -r requirements.txt
+```
+
+Needs Python 3.10 or newer. Check with `python3 --version`.
+
+### Step 2 — Tell it who should write the notes
+
+**This step is required.** Something has to read each transcript and write the
+notes, and that is not included — you bring it. Pick **one** of these.
+
+You do *not* need Claude, or any Anthropic product, to use this.
+
+| Option | What you need | Cost |
+|---|---|---|
+| **Google Gemini** | A free key from [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | Cheapest; has a free tier |
+| **OpenAI** | A key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys) | Pay per token |
+| **Anthropic** | A key from [console.anthropic.com](https://console.anthropic.com/) | Pay per token |
+| **Claude Code** | The `claude` CLI installed and signed in | Included in that subscription |
+
+Most people should start with **Gemini** — the key is free to create and a
+whole course costs very little.
+
+Install the API libraries, then write your key into a `.env` file:
+
+```bash
+python3 -m notesgen setup --extra api
+cp .env.example .env
+```
+
+Now open `.env` in any text editor and add two lines:
+
+```ini
+NOTESGEN_PROVIDER=gemini
+GEMINI_API_KEY=paste-your-key-here
+```
+
+Swap in `openai` + `OPENAI_API_KEY`, or `anthropic` + `ANTHROPIC_API_KEY`, if
+you chose one of those. If you already have the `claude` CLI installed, skip
+this whole step — it is detected automatically and needs no key.
+
+`.env` is gitignored, so your key never leaves your machine.
+
+### Step 3 — Start it
+
+```bash
 python3 -m notesgen serve
 ```
 
-That opens <http://127.0.0.1:8787> and prints an access token. Paste a Udemy
-course URL, choose what you want, and press **Generate notes**.
-
-The page shows progress per lecture while it runs, the running cost, and
-download links at the end. Re-exporting a course you have already generated is
-free - only the model calls cost anything, and finished work is never redone.
-
 ```
-$ python3 -m notesgen serve
-
   notesgen web UI  ->  http://127.0.0.1:8787/
   extension token  ->  k7Qx...redacted
-  output           ->  /path/to/notesgen/output
+  output           ->  /path/to/output
 ```
 
-Two ways to get a course in:
+Your browser opens at <http://127.0.0.1:8787>. **Keep this terminal window
+open** — closing it stops the server.
+
+The top of the page shows a green dot next to your provider. If it says
+*no provider configured*, go back to Step 2.
+
+### Step 4 — Give it a course
 
 | | How it works | Needs |
 |---|---|---|
@@ -80,7 +130,26 @@ Two ways to get a course in:
 
 The extension is quicker and far more reliable. The URL path drives a browser
 with Playwright, which means clearing a Cloudflare check and a sign-in prompt
-every time.
+every time. Setting the extension up takes two minutes — see
+[The Chrome extension](#the-chrome-extension).
+
+### Step 5 — Pick what you want and press Generate
+
+Tick **PDF**, **Web page**, **Word**, or **Markdown**, then press
+**Generate notes**. PDF and Web page are the ones most people want.
+
+**Google Doc** is also offered, but it needs a one-off Google Cloud setup
+first — see [section 7](#7-google-docs-setup-in-full). Until that is done the
+button stays disabled and the page tells you why, so you cannot accidentally
+start an hour-long run that fails at the last step.
+
+The page shows progress per lecture, the running cost, and download links at
+the end. A 180-lecture course takes about an hour.
+
+**You can close the page or stop the server at any time.** Progress is saved
+after every lecture, so starting the same course again picks up where it left
+off instead of paying twice. Re-exporting to another format later is free —
+only writing the notes costs anything.
 
 ---
 
@@ -123,10 +192,12 @@ You need:
   install it from [python.org](https://www.python.org/downloads/).
 - **A Udemy course you are enrolled in.** This reads captions from courses on
   your own account; it cannot reach anything you have not bought.
-- **Something to write the notes.** Either the
-  [Claude Code](https://claude.com/claude-code) CLI (uses your existing
-  subscription, no API key, no per-token bill) or an API key from Anthropic,
-  OpenAI or Google. Section 4 covers both.
+- **Something to write the notes.** An API key from
+  [Google](https://aistudio.google.com/apikey) (cheapest, has a free tier),
+  [OpenAI](https://platform.openai.com/api-keys) or
+  [Anthropic](https://console.anthropic.com/) — or, if you happen to already
+  use it, the [Claude Code](https://claude.com/claude-code) CLI, which needs no
+  key. Any one of these is enough. Section 4 covers all of them.
 
 Optional, and only if you want them:
 
@@ -135,17 +206,18 @@ Optional, and only if you want them:
 - **Node.js** - to render diagrams into Word documents. Diagrams work in the
   web page output without it.
 
-**Time and cost.** A 180-lecture course takes about an hour to process. On the
-Claude Code subscription there is no extra charge. On a paid API it is roughly
-$2-6 for a whole course depending on the model.
+**Time and cost.** A 180-lecture course takes about an hour to process. On a
+paid API that is roughly $2-6 for the whole course depending on the model —
+Gemini is at the cheap end. On a Claude Code subscription there is no extra
+charge. Nothing is ever regenerated twice, so a repeat run costs nothing.
 
 ---
 
 ## 2. Install
 
 ```bash
-git clone https://github.com/<you>/notesgen.git
-cd notesgen
+git clone https://github.com/MMC1410001/Utility_With_UI_for_notes.git
+cd Utility_With_UI_for_notes
 python3 -m pip install -r requirements.txt
 ```
 
@@ -390,14 +462,16 @@ captions failed.
 
 | Provider | What you need | Cost |
 |---|---|---|
-| **`claude-cli`** *(default)* | [Claude Code](https://claude.com/claude-code) installed and signed in | Included in your subscription |
-| `anthropic` | `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/) | Pay per token |
+| `gemini` | `GEMINI_API_KEY` from [aistudio.google.com](https://aistudio.google.com/apikey) | Cheapest, free tier |
 | `openai` | `OPENAI_API_KEY` from [platform.openai.com](https://platform.openai.com/api-keys) | Pay per token |
-| `gemini` | `GEMINI_API_KEY` from [aistudio.google.com](https://aistudio.google.com/apikey) | Pay per token, cheapest |
+| `anthropic` | `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com/) | Pay per token |
+| `claude-cli` | [Claude Code](https://claude.com/claude-code) installed and signed in | Included in that subscription |
 
-With Claude Code installed you need to do nothing — it is picked automatically.
+**Which is picked.** `--provider` wins, then `NOTESGEN_PROVIDER` from `.env`,
+then the `claude` CLI if it happens to be installed, then whichever API key is
+set. So if you have no Claude CLI, just set a key and it is used.
 
-To use an API instead, copy the example file and fill in one key:
+To use an API, copy the example file and fill in one key:
 
 ```bash
 cp .env.example .env
