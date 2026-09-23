@@ -1,46 +1,70 @@
-name: ci
-
+# ============================================================================
+# DISABLED on 2026-09-23. This workflow no longer runs automatically.
+#
+# The original is preserved verbatim below, commented out. To restore it:
+#   1. delete everything above the '--- original workflow ---' marker
+#   2. uncomment the block below (strip the leading '# ' from each line)
+#   3. re-enable the workflow in the repo's Actions tab (it is also
+#      disabled server-side via the Actions API)
+#
+# The stub below exists only to keep the file valid YAML. A file that is
+# commented out entirely is reported by GitHub as an invalid workflow,
+# which itself shows up as a failed run.
+# ============================================================================
+name: "ci (disabled)"
 on:
-  push:
-    branches: [main]
-  pull_request:
-
+  workflow_dispatch:
 jobs:
-  test:
+  disabled:
+    if: false
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      # tests_mdparse imports diagrams -> generate -> glossary -> yaml, so the
-      # suite needs the core dependencies even though it touches no network.
-      - run: python -m pip install --upgrade pip
-      - run: python -m pip install -e ".[web]"
-      - name: unit tests
-        run: python tests.py
-      - name: legacy markdown tests
-        run: python tests_mdparse.py
-      - name: imports and CLI surface
-        run: |
-          python -c "import notesgen.cli, notesgen.pipeline, notesgen.server.app"
-          python -m notesgen --help
-          python -m notesgen setup --dry-run
-      - name: byte-compile everything
-        run: python -m compileall -q notesgen
+      - run: "echo 'this workflow is disabled'"
 
-  extension:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - name: syntax-check the extension
-        run: |
-          for f in extension/*.js extension/lib/*.js; do node --check "$f"; done
-          python3 -c "import json; json.load(open('extension/manifest.json'))"
+# --- original workflow ---
+# name: ci
+#
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         python-version: ["3.10", "3.12", "3.13"]
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-python@v5
+#         with:
+#           python-version: ${{ matrix.python-version }}
+#       # tests_mdparse imports diagrams -> generate -> glossary -> yaml, so the
+#       # suite needs the core dependencies even though it touches no network.
+#       - run: python -m pip install --upgrade pip
+#       - run: python -m pip install -e ".[web]"
+#       - name: unit tests
+#         run: python tests.py
+#       - name: legacy markdown tests
+#         run: python tests_mdparse.py
+#       - name: imports and CLI surface
+#         run: |
+#           python -c "import notesgen.cli, notesgen.pipeline, notesgen.server.app"
+#           python -m notesgen --help
+#           python -m notesgen setup --dry-run
+#       - name: byte-compile everything
+#         run: python -m compileall -q notesgen
+#
+#   extension:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: "20"
+#       - name: syntax-check the extension
+#         run: |
+#           for f in extension/*.js extension/lib/*.js; do node --check "$f"; done
+#           python3 -c "import json; json.load(open('extension/manifest.json'))"
